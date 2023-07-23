@@ -39,5 +39,5 @@ const updateUser = async(req,res)=>{
     const response = await pool.query("update users set name = $1, email = $2 where id=$3",[name,email,idUser]);
     res.json(response);
 }
-
+//hello there is a change
 module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser};
