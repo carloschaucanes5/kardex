@@ -1,16 +1,13 @@
-const { Pool} = require("pg");
-const pool = new Pool({
-    host:'localhost',
-    user:'postgres',
-    password:'postgres1',
-    database:'kardex',
-    port:'5432'
-})
+const {pool} =  require("../db/conection");
 
 const saveUser = async (req,res)=>{
-    const {name,email} = req.body;
-    let sql = "insert into users(name,email)values($1,$2)";
-    const response = await pool.query(sql,[name,email]);
+    const {
+            idUser,firstName,secondName,firstLastname,secondLastname,
+            email,address,phone,status,password,idRole
+          } = req.body;
+
+    let sql = "insert into users(idUser,firstName,secondName,firstLastname,secondLastname,email,address,phone,status,password,idRole)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
+    const response = await pool.query(sql,[idUser,firstName,secondName,firstLastname,secondLastname,email,address,phone,status,password,idRole]);
     console.log("this is the response=>",response);
     res.send(response);
 }
