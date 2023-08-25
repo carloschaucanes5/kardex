@@ -1,15 +1,26 @@
 const {pool} =  require("../db/conection");
-
+const Response = require("../models/Response");
+const CDB = require("../config/configDb");
+const CT = require("../config/users/configTableUser");
+const resu = new Response();
 const saveUser = async (req,res)=>{
-    const {
-            idUser,firstName,secondName,firstLastname,secondLastname,
-            email,address,phone,status,password,idRole
+    try{
+        const {
+            id_user,first_name,second_name,first_lastname,second_lastname,
+            email,address,phone,status,password,id_role
           } = req.body;
+        let sql = "insert into users(id_user,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
+        const response = await pool.query(sql,[id_user,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role]);
+        resu.setCode(200);
+        resu.setMessage("");
+        resu.setResponse(response.rowCount);
+        res.json("usuario registrado");
+    }catch(err){
+        const resError = new  CT();
+        const r = resError.processErrors(err);
+        res.json(r);
+    }
 
-    let sql = "insert into users(idUser,firstName,secondName,firstLastname,secondLastname,email,address,phone,status,password,idRole)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
-    const response = await pool.query(sql,[idUser,firstName,secondName,firstLastname,secondLastname,email,address,phone,status,password,idRole]);
-    console.log("this is the response=>",response);
-    res.send(response);
 }
 
 const getUsers = async(req,res)=>{
