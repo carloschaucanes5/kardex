@@ -63,14 +63,27 @@ const generateAccessToken = (user)=>{
 
 const getUsers = async(req,res)=>{
 const response = await pool.query("select * from users");
-    console.log(response.rows);
     res.send(response.rows);   
 }
 
 const getUserById = async(req,res)=>{
-    const idUser = req.params.id;
-    const response = await pool.query("select * from users where id = $1",[idUser]);
-    res.json(response.rows);
+    try
+    {
+        const idUser = req.params.id;
+        const response = await pool.query("select * from users where identification = $1",[idUser]);
+        resu.setCode(CG.C200);
+        resu.setMessage(CU.userFound);
+        resu.setResponse(response.rows);
+        res.json(resu);
+    }
+    catch(err)
+    {
+        resu.setCode(CG.c500);
+        resu.setMessage(CG.c500Message);
+        resu.setResponse(err);
+        res.json(resu);
+    }
+
 }
 
 const deleteUser = async(req,res)=>{

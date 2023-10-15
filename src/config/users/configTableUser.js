@@ -20,7 +20,7 @@ class ConfigTableUser{
                 alias: "email",
                 description:"correo electrónco",
                 constraint:"uq_users_email",
-                constraintError:"El correo electrónco ya se encuentra en uso",
+                constraintError:"El correo electrónico ya se encuentra en uso",
                 code:CG.C400,
                 constraint1:"ck_email_not_null",
                 constraintError1:"El correo electrónico no debe ser nulo",
