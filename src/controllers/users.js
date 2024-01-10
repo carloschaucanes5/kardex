@@ -9,10 +9,10 @@ const saveUser = async (req,res)=>{
     try{
         const {
             identification,first_name,second_name,first_lastname,second_lastname,
-            email,address,phone,status,password,id_role
+            email,address,phone,status,password,id_role,idt
           } = req.body;
-        let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)";
-        const response = await pool.query(sql,[identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role]);
+        let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
+        const response = await pool.query(sql,[identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt]);
         resu.setCode(CG.C200);
         resu.setMessage(CU.registerSuccessUser);
         resu.setResponse(response.rowCount);
