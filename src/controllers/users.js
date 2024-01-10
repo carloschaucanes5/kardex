@@ -4,7 +4,6 @@ const CG = require("../config/configGeneral");
 const CTU = require("../config/users/configTableUser");
 const CU = require("../config/users/configUser");
 const resu = new Response();
-
 const jwt = require('jsonwebtoken');
 const saveUser = async (req,res)=>{
     try{
@@ -37,7 +36,7 @@ const login = async(req,res)=>{
             const token = generateAccessToken(user);
             resu.setCode(CG.C200);
             resu.setMessage(CU.authenticatedUser);
-            resu.setResponse({token});
+            resu.setResponse({token,user:response.rows[0]});
             res.json(resu);
         }
         else
@@ -98,5 +97,23 @@ const updateUser = async(req,res)=>{
     const response = await pool.query("update users set name = $1, email = $2 where id=$3",[name,email,idUser]);
     res.json(response);
 }
-//hello there is a change
-module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login};
+
+//funcion para obtener listado de los tipos
+//de identificacion para el usuario
+const getTypesIdentification = async(req,res)=>{
+    try{
+        const response = await pool.query("select * from typesidentification where state = 'a'");
+        resu.setCode(CG.C200);
+        resu.setMessage('');
+        resu.setResponse(response.rows);
+        res.json(resu);
+    }
+    catch(err)
+    {
+        const resError = new CTU();
+        const r = resError.processErrors(err);
+        res.json(r);
+    }
+
+}
+module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login,getTypesIdentification};

@@ -1,5 +1,5 @@
 module.exports =  class ConfigGeneral{
-    static PORT = 5000; 
+    static PORT = 3000; 
     static C200 = 200;
     static C400 = 400;
     static C401 = 401;
@@ -8,7 +8,7 @@ module.exports =  class ConfigGeneral{
     static c500Message = "Error en el servidor, Intentalo más tarde";
     static SECRETTOKEN = "KARDEX";
     static KEYauthorization = "authorization";
-    static API = "/kardex";
+    static API = "/kardexAPI";
     
     
 }
