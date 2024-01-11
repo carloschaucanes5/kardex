@@ -14,6 +14,7 @@ const validateToken = (req,res,next)=>{
     {
         jwt.verify(accessToken,CG.SECRETTOKEN,(err,user)=>{
             if(err){
+                console.log(err);
                 resp.setCode(CG.C401);
                 resp.setMessage(CG.C401Message);
                 resp.setResponse(CG.C401Message);
@@ -23,7 +24,7 @@ const validateToken = (req,res,next)=>{
             {
                 next();
             }
-        });
+        })
     }
 
 }

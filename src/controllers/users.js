@@ -11,7 +11,7 @@ const saveUser = async (req,res)=>{
             identification,first_name,second_name,first_lastname,second_lastname,
             email,address,phone,status,password,id_role,idt
           } = req.body;
-        let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
+        let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
         const response = await pool.query(sql,[identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt]);
         resu.setCode(CG.C200);
         resu.setMessage(CU.registerSuccessUser);
@@ -57,7 +57,7 @@ const login = async(req,res)=>{
 }
 
 const generateAccessToken = (user)=>{
-    return jwt.sign(user,CG.SECRETTOKEN,{expiresIn:'5m'});
+    return jwt.sign(user,CG.SECRETTOKEN,{expiresIn:'120m'});
 }
 
 const getUsers = async(req,res)=>{

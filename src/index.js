@@ -5,7 +5,6 @@ const CG = require("./config/configGeneral.js");
 const app = express();
  //define port
 const PORT = CG.PORT;
-
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
