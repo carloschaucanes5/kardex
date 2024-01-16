@@ -5,5 +5,9 @@ module.exports = class Configuser{
     static userInvalideData = "Datos de usuario invalidos";
     static authenticatedUser = "Usuario autenticado";
     static userFound = "Usuerio encontrado";
-
+    
+    static emailDuplicateConstraint = "uq_users_email";
+    static emailDuplicate = "Correo electrónico duplicado";
+    static identificationDuplicateConstraint = "uq_users_identification";
+    static identificationDuplicate = "El número de identificacion ya esta en uso";
 }

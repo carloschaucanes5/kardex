@@ -1,10 +1,11 @@
 const {pool} =  require("../db/conection");
+const {generateAccessToken} = require("../middleware/validateToken");
 const Response = require("../models/Response");
 const CG = require("../config/configGeneral");
-const CTU = require("../config/users/configTableUser");
 const CU = require("../config/users/configUser");
 const resu = new Response();
 const jwt = require('jsonwebtoken');
+//funcion guardar usuario
 const saveUser = async (req,res)=>{
     try{
         const {
@@ -17,15 +18,26 @@ const saveUser = async (req,res)=>{
         resu.setMessage(CU.registerSuccessUser);
         resu.setResponse(response.rowCount);
         res.json(resu);
-    }
-    catch(err)
-    {
-        const resError = new CTU();
-        const r = resError.processErrors(err);
-        res.json(r);
+    }catch(err){
+        if(err.constraint == CU.emailDuplicateConstraint){
+            resu.setCode(CG.C401);
+            resu.setMessage(CU.emailDuplicate);
+            resu.setResponse(err);
+            res.json(resu);
+        }else if(err.constraint = CU.identificationDuplicateConstraint){
+            resu.setCode(CG.C401);
+            resu.setMessage(CU.identificationDuplicate);
+            resu.setResponse(err);
+            res.json(resu);
+        }else{
+            resu.setCode(CG.c500);
+            resu.setMessage(CG.c500Message);
+            resu.setResponse(err);
+            res.json(resu);
+        }  
     }
 }
-
+//funcion autenticar usuario
 const login = async(req,res)=>{
     try
     {
@@ -38,33 +50,25 @@ const login = async(req,res)=>{
             resu.setMessage(CU.authenticatedUser);
             resu.setResponse({token,user:response.rows[0]});
             res.json(resu);
-        }
-        else
-        {
+        }else{
             resu.setCode(CG.C400);
             resu.setMessage(CU.userInvalideData);
             resu.setResponse(CU.userInvalideData);
             res.json(resu);
         }
-    }
-    catch(err)
-    {
+    }catch(err){
         resu.setCode(CG.c500);
         resu.setMessage(CG.c500Message);
         resu.setResponse(err);
         res.json(resu);
     }
 }
-
-const generateAccessToken = (user)=>{
-    return jwt.sign(user,CG.SECRETTOKEN,{expiresIn:'120m'});
-}
-
+//funcion obtener lista de usuarios
 const getUsers = async(req,res)=>{
-const response = await pool.query("select * from users");
+    const response = await pool.query("select * from users");
     res.send(response.rows);   
 }
-
+//funcion obtner usuario por el numero de identificacion
 const getUserById = async(req,res)=>{
     try
     {
@@ -74,23 +78,20 @@ const getUserById = async(req,res)=>{
         resu.setMessage(CU.userFound);
         resu.setResponse(response.rows);
         res.json(resu);
-    }
-    catch(err)
-    {
+    }catch(err){
         resu.setCode(CG.c500);
         resu.setMessage(CG.c500Message);
         resu.setResponse(err);
         res.json(resu);
     }
-
 }
-
+//funcion eliminar usuario
 const deleteUser = async(req,res)=>{
     const idUser = req.params.id; 
     const response = await pool.query("delete from users where id = $1",[idUser]);
     res.json(response);
 }
-
+//funcion actualizar usuario
 const updateUser = async(req,res)=>{
     const idUser = req.params.id;
     const {name,email} = req.body;
@@ -98,8 +99,7 @@ const updateUser = async(req,res)=>{
     res.json(response);
 }
 
-//funcion para obtener listado de los tipos
-//de identificacion para el usuario
+//funcion listado de los tipos de identificacion para los usuarios
 const getTypesIdentification = async(req,res)=>{
     try{
         const response = await pool.query("select * from typesidentification where state = 'a'");
@@ -114,6 +114,5 @@ const getTypesIdentification = async(req,res)=>{
         const r = resError.processErrors(err);
         res.json(r);
     }
-
 }
 module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login,getTypesIdentification};
