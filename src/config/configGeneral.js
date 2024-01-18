@@ -11,6 +11,7 @@ module.exports =  class ConfigGeneral{
     static C200Authorized = "Acceso autorizado";
     static API = "/kardexAPI";
     static expireTokenTime = "120";
+    static numberOfRounds = 10;
     
     
 }

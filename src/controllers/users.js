@@ -4,7 +4,9 @@ const Response = require("../models/Response");
 const CG = require("../config/configGeneral");
 const CU = require("../config/users/configUser");
 const resu = new Response();
+const EncryptText = require("../middleware/encryptText");
 const jwt = require('jsonwebtoken');
+
 //funcion guardar usuario
 const saveUser = async (req,res)=>{
     try{
@@ -115,4 +117,45 @@ const getTypesIdentification = async(req,res)=>{
         res.json(r);
     }
 }
-module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login,getTypesIdentification};
+//funcion para encriptar la constraseña de software
+const utilEncryptText = async (req,res)=>{
+    try{
+        const {secretWord} = req.body;
+        const result = await EncryptText.encrypt(secretWord,CG.numberOfRounds);
+        resu.setCode(CG.C200);
+        resu.setMessage('');
+        resu.setResponse(result);
+        res.json(resu);
+    }catch(err){
+        resu.setCode(CG.c500);
+        resu.setMessage(CG.c500Message);
+        resu.setResponse(err);
+        res.json(resu);
+    }
+}
+//funcion para comparar coincidencia de contraseña
+    const compareEncryptText = async (req,res)=>{
+        try{
+            const {secretWord,encrypWord} = req.body;
+            const result = await EncryptText.compare(secretWord,encrypWord);
+            if(result){
+                resu.setCode(CG.C200);
+                resu.setMessage('');
+                resu.setResponse(result);
+                res.json(resu);
+            }else{
+                resu.setCode(CG.C401);
+                resu.setMessage('');
+                resu.setResponse(result);
+                res.json(resu);
+            }
+
+        }catch(err){
+            resu.setCode(CG.c500);
+            resu.setMessage(CG.c500Message);
+            resu.setResponse(err);
+            res.json(resu);
+        }
+    }
+
+module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login,getTypesIdentification,utilEncryptText,compareEncryptText};
