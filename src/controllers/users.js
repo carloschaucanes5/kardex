@@ -7,6 +7,7 @@ const resu = new Response();
 const EncryptText = require("../middleware/encryptText");
 const jwt = require('jsonwebtoken');
 
+
 //funcion guardar usuario
 const saveUser = async (req,res)=>{
     try{
@@ -14,8 +15,9 @@ const saveUser = async (req,res)=>{
             identification,first_name,second_name,first_lastname,second_lastname,
             email,address,phone,status,password,id_role,idt
           } = req.body;
+        let password1 = await EncryptText.encrypt(password,CG.numberOfRounds);
         let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
-        const response = await pool.query(sql,[identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt]);
+        const response = await pool.query(sql,[identification,first_name.toUpperCase(),second_name.toUpperCase(),first_lastname.toUpperCase(),second_lastname.toUpperCase(),email,address,phone,status,password1,id_role,idt]);
         resu.setCode(CG.C200);
         resu.setMessage(CU.registerSuccessUser);
         resu.setResponse(response.rowCount);
@@ -44,14 +46,25 @@ const login = async(req,res)=>{
     try
     {
         const {email,password}=req.body;
-        const response = await pool.query("select * from users where email = $1 and password = $2",[email,password]);
+        const response = await pool.query("select * from users where email = $1",[email]);
         if(response.rowCount== 1){
-            const user = {email,password};
-            const token = generateAccessToken(user);
-            resu.setCode(CG.C200);
-            resu.setMessage(CU.authenticatedUser);
-            resu.setResponse({token,user:response.rows[0]});
-            res.json(resu);
+            const passwordEncripted = response.rows[0].password;
+            if(await EncryptText.compare(password,passwordEncripted)){
+                const user = {email,password};
+                const token = generateAccessToken(user);
+                resu.setCode(CG.C200);
+                resu.setMessage(CU.authenticatedUser);
+                resu.setResponse({token,user:response.rows[0]});
+                res.json(resu);
+            }
+            else
+            {
+                //contraseña incorrecta
+                resu.setCode(CG.C400);
+                resu.setMessage(CU.passwordInvalideData);
+                resu.setResponse(CU.passwordInvalideData);
+                res.json(resu);
+            }
         }else{
             resu.setCode(CG.C400);
             resu.setMessage(CU.userInvalideData);

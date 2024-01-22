@@ -55,7 +55,7 @@ const revalidateToken = (req,res)=>{
 }
 //GENERAR ACCESS TOKEN  como metodo de seguridad
 const generateAccessToken = (user)=>{
-    return jwt.sign(user,CG.SECRETTOKEN,{expiresIn:+CG.expireTokenTime});
+    return jwt.sign(user,CG.SECRETTOKEN,{expiresIn:CG.expireTokenTime});
 }
 
 

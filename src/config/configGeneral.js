@@ -10,7 +10,7 @@ module.exports =  class ConfigGeneral{
     static KEYauthorization = "authorization";
     static C200Authorized = "Acceso autorizado";
     static API = "/kardexAPI";
-    static expireTokenTime = "120";
+    static expireTokenTime = "240m";
     static numberOfRounds = 10;
     
     
