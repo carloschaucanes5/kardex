@@ -41,6 +41,28 @@ const saveUser = async (req,res)=>{
         }  
     }
 }
+//funcion para listar usuarios
+const listUser = async(req,res)=>{
+    try{
+        const response  = await pool.query("select * from users where status = $1",[CU.activeStatusUser]);
+        if(response.rowCount >0){
+            resu.setCode(CG.C200);
+            resu.setMessage(response.rowCount);
+            resu.setResponse(response.rows);
+            res.json(resu);
+        }else{
+            resu.setCode(CG.C200);
+            resu.setMessage(response.rowCount);
+            resu.setResponse(response.rows);
+            res.json(resu);
+        }
+    }catch{
+        resu.setMessage(CG.c500Message);
+        resu.setResponse(err);
+        res.json(resu);
+    }
+}
+
 //funcion autenticar usuario
 const login = async(req,res)=>{
     try
@@ -171,4 +193,4 @@ const utilEncryptText = async (req,res)=>{
         }
     }
 
-module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login,getTypesIdentification,utilEncryptText,compareEncryptText};
+module.exports = {getUsers,saveUser,getUserById,deleteUser,updateUser,login,getTypesIdentification,utilEncryptText,compareEncryptText,listUser};
