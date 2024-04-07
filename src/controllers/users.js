@@ -68,7 +68,7 @@ const login = async(req,res)=>{
     try
     {
         const {email,password}=req.body;
-        const response = await pool.query("select * from users where email = $1",[email]);
+        const response = await pool.query("select * from users us inner join roles ro on us.id_role = ro.id_role where email = $1",[email]);
         if(response.rowCount== 1){
             const passwordEncripted = response.rows[0].password;
             if(await EncryptText.compare(password,passwordEncripted)){
