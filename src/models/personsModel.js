@@ -1,7 +1,7 @@
 const {pool} =  require("../db/conection");
-const {EncryptText} = require("../middleware/encryptText")
+const {EncryptText} = require("../middleware/encryptText");
 
-export class PersonsModel{
+ class PersonsModel{
     constructor(){}
     //funcion guardar persona
     async savePerson (person){

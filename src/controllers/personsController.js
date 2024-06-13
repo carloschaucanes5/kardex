@@ -6,21 +6,24 @@ const CU = require("../config/users/configUser");
 const resu = new Response();
 const EncryptText = require("../middleware/encryptText");
 const jwt = require('jsonwebtoken');
-const {PersonsModel} = require('../models/personsModel'); 
+const PersonsModel = require('../models/personsModel'); 
 
 //funcion guardar usuario
 const saveUser = async (req,res)=>{
-    let person = new pers
+    let person = new PersonsModel();
     try{
+        /*
         const {
             identification,first_name,second_name,first_lastname,second_lastname,
             email,address,phone,types_identification_id
-          } = req.body;
+          } = req.body;*/
+        let resp = person.saveUser(req.body);
+
         
         resu.setCode(CG.C200);
         resu.setMessage(CU.registerSuccessUser);
         resu.setResponse(response.rowCount);
-        res.json(resu);
+        res.json(JSON.stringify(resp));
     }catch(err){
         if(err.constraint == CU.emailDuplicateConstraint){
             resu.setCode(CG.C401);

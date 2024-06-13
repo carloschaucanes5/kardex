@@ -1,7 +1,7 @@
 const {Router} = require("express");
 const {validateToken,revalidateToken} = require("../middleware/validateToken");
 const CG = require("../config/configGeneral");
-const {getUsers,saveUser,login ,getUserById, deleteUser, updateUser,getTypesIdentification,utilEncryptText,compareEncryptText,listUser} = require("../controllers/users.js") 
+const {getUsers,saveUser,login ,getUserById, deleteUser, updateUser,getTypesIdentification,utilEncryptText,compareEncryptText,listUser} = require("../controllers/usersController.js") 
 const router = Router();
 router.get(CG.API+"/users",getUsers);
 router.post(CG.API+"/saveUser",/*validateToken,*/saveUser);

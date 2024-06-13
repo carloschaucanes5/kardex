@@ -12,5 +12,7 @@ module.exports =  class ConfigGeneral{
     static API = "/kardexAPI";
     static expireTokenTime = "240m";
     static numberOfRounds = 10;
+    static RESNOCOMMIT = 0;
+    static RESCOMMIT = 1;
 
 }

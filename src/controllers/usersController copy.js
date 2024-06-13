@@ -6,22 +6,24 @@ const CU = require("../config/users/configUser");
 const resu = new Response();
 const EncryptText = require("../middleware/encryptText");
 const jwt = require('jsonwebtoken');
-
+const {User} = require("../models/usersModel");
 
 //funcion guardar usuario
 const saveUser = async (req,res)=>{
     try{
-        const {
+        let user = new User();
+        /*const {
             identification,first_name,second_name,first_lastname,second_lastname,
             email,address,phone,status,password,id_role,idt
-          } = req.body;
-        let password1 = await EncryptText.encrypt(password,CG.numberOfRounds);
-        let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
-        const response = await pool.query(sql,[identification,first_name.toUpperCase(),second_name.toUpperCase(),first_lastname.toUpperCase(),second_lastname.toUpperCase(),email,address,phone,status,password1,id_role,idt]);
+          } = req.body;*/
+          //let resp = user.saveUser(req.body);
+        //let password1 = await EncryptText.encrypt(password,CG.numberOfRounds);
+        //let sql = "insert into users(identification,first_name,second_name,first_lastname,second_lastname,email,address,phone,status,password,id_role,idt) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
+        //const response = await pool.query(sql,[identification,first_name.toUpperCase(),second_name.toUpperCase(),first_lastname.toUpperCase(),second_lastname.toUpperCase(),email,address,phone,status,password1,id_role,idt]);
         resu.setCode(CG.C200);
         resu.setMessage(CU.registerSuccessUser);
-        resu.setResponse(response.rowCount);
-        res.json(resu);
+        resu.setResponse(".."); 
+        res.json(JSON.stringify(req.body));
     }catch(err){
         if(err.constraint == CU.emailDuplicateConstraint){
             resu.setCode(CG.C401);
