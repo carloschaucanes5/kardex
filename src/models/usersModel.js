@@ -48,7 +48,7 @@ class UsersModel{
             return {code:CG.RESCOMMIT,message:''};
         }catch(err){
             await pool.query("ROLLBACK");
-            return  {code:CG.RESNOCOMMIT,message:err};
+            return  {code:CG.RESEXCEPTOPM,message:err};
         }
         
     }

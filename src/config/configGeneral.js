@@ -14,5 +14,7 @@ module.exports =  class ConfigGeneral{
     static numberOfRounds = 10;
     static RESNOCOMMIT = 0;
     static RESCOMMIT = 1;
+    static RESEXCEPTOPM = -1;
+  
 
 }

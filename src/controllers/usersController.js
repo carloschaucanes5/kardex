@@ -21,29 +21,16 @@ const saveUser = async (req,res)=>{
         }
         else
         {
-            resu.setCode(CG.C401);
+            resu.setCode(CG.C400);
             resu.setMessage(CU.userInvalideData);
             resu.setResponse(resUser);
             res.json(resu);
         }
-
     }catch(err){
-        if(err.constraint == CU.emailDuplicateConstraint){
-            resu.setCode(CG.C401);
-            resu.setMessage(CU.emailDuplicate);
-            resu.setResponse(err);
-            res.json(resu);
-        }else if(err.constraint = CU.identificationDuplicateConstraint){
-            resu.setCode(CG.C401);
-            resu.setMessage(CU.identificationDuplicate);
-            resu.setResponse(err);
-            res.json(resu);
-        }else{
-            resu.setCode(CG.c500);
-            resu.setMessage(CG.c500Message);
-            resu.setResponse(err);
-            res.json(resu);
-        }  
+        resu.setCode(CG.c500);
+        resu.setMessage(CG.c500Message);
+        resu.setResponse(err);
+        res.json(resu);   
     }
 }
 //funcion para listar usuarios
