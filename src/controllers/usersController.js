@@ -1,14 +1,11 @@
-const {pool} =  require("../db/conection");
-const {generateAccessToken} = require("../middleware/validateToken");
+
 const Response = require("../models/Response");
 const CG = require("../config/configGeneral");
 const CU = require("../config/users/configUser");
 const resu = new Response();
 const EncryptText = require("../middleware/encryptText");
-const jwt = require('jsonwebtoken');
-const {PersonsModel} = require("../models/personsModel");
 const UsersModel = require("../models/usersModel");
-//funcion guardar usuario
+//Apires guardar usuario(carlosCh)
 const saveUser = async (req,res)=>{
     let user = new UsersModel();
     try{
@@ -33,58 +30,31 @@ const saveUser = async (req,res)=>{
         res.json(resu);   
     }
 }
-//funcion para listar usuarios
-const listUser = async(req,res)=>{
-    try{
-        const response  = await pool.query("select * from users where status = $1",[CU.activeStatusUser]);
-        if(response.rowCount >0){
-            resu.setCode(CG.C200);
-            resu.setMessage(response.rowCount);
-            resu.setResponse(response.rows);
-            res.json(resu);
-        }else{
-            resu.setCode(CG.C200);
-            resu.setMessage(response.rowCount);
-            resu.setResponse(response.rows);
-            res.json(resu);
-        }
-    }catch{
-        resu.setMessage(CG.c500Message);
-        resu.setResponse(err);
-        res.json(resu);
-    }
-}
 
-//funcion autenticar usuario
+//apires autenticar usuario(CarlosCh)
 const login = async(req,res)=>{
     try
     {
-        const {email,password}=req.body;
-        const response = await pool.query("select * from users us inner join roles ro on us.id_role = ro.id_role where email = $1",[email]);
-        if(response.rowCount== 1){
-            const passwordEncripted = response.rows[0].password;
-            if(await EncryptText.compare(password,passwordEncripted)){
-                const user = {email,password};
-                const token = generateAccessToken(user);
-                resu.setCode(CG.C200);
-                resu.setMessage(CU.authenticatedUser);
-                resu.setResponse({token,user:response.rows[0]});
-                res.json(resu);
-            }
-            else
-            {
-                //contraseña incorrecta
-                resu.setCode(CG.C400);
-                resu.setMessage(CU.passwordInvalideData);
-                resu.setResponse(CU.passwordInvalideData);
-                res.json(resu);
-            }
-        }else{
+       let user = new UsersModel();
+       const {identification,password} = req.body;
+       let resp = await user.login(identification,password);
+       if(resp.code == CG.RESCOMMIT){
+            resu.setCode(CG.C200);
+            resu.setMessage(CU.authenticatedUser);
+            resu.setResponse(resp.message);
+            res.json(resu);
+        }else if(resp.code == CG.RESNOCOMMIT){
             resu.setCode(CG.C400);
-            resu.setMessage(CU.userInvalideData);
-            resu.setResponse(CU.userInvalideData);
+            resu.setMessage(resp.message);
+            resu.setResponse('');
+            res.json(resu);
+        }else{
+            resu.setCode(CG.c500);
+            resu.setMessage(CG.c500Message);
+            resu.setResponse(resp.message);
             res.json(resu);
         }
+    
     }catch(err){
         resu.setCode(CG.c500);
         resu.setMessage(CG.c500Message);
@@ -92,6 +62,32 @@ const login = async(req,res)=>{
         res.json(resu);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //funcion obtener lista de usuarios
 const getUsers = async(req,res)=>{
     const response = await pool.query("select * from users");
@@ -114,6 +110,34 @@ const getUserById = async(req,res)=>{
         res.json(resu);
     }
 }
+
+
+//funcion para listar usuarios
+const listUser = async(req,res)=>{
+    try{
+        const response  = await pool.query("select * from users where status = $1",[CU.activeStatusUser]);
+        if(response.rowCount >0){
+            resu.setCode(CG.C200);
+            resu.setMessage(response.rowCount);
+            resu.setResponse(response.rows);
+            res.json(resu);
+        }else{
+            resu.setCode(CG.C200);
+            resu.setMessage(response.rowCount);
+            resu.setResponse(response.rows);
+            res.json(resu);
+        }
+    }catch{
+        resu.setMessage(CG.c500Message);
+        resu.setResponse(err);
+        res.json(resu);
+    }
+}
+
+
+
+
+
 //funcion eliminar usuario
 const deleteUser = async(req,res)=>{
     const idUser = req.params.id; 
